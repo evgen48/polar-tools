@@ -1,6 +1,8 @@
 require 'date'
 require 'zlib'
 
+gem 'google-protobuf', '< 4' # generated *_pb.rb files use the DSL removed in protobuf 4.x
+
 $LOAD_PATH << "#{File.dirname(__FILE__)}/protobuf"
 
 require "types_pb"
