@@ -17,7 +17,8 @@ module PolarUsb
       begin
         @serial = SerialPort.new @serial_dev, { 'baud' => 115200, 'data_bits' => 8, 'stop_bits' => 1, 'parity' => 0 }
         @serial.read_timeout = 1
-        @serial.flow_control = SerialPort::HARD
+        # Hardware flow control can stall transfers on Windows (CTS never asserted by the CDC driver)
+        @serial.flow_control = Gem.win_platform? ? SerialPort::NONE : SerialPort::HARD
       rescue => e
         STDERR.write "#{self.product} serial #{self.serial_number} found, but couldn't open serial device on #{@serial_dev}: #{e}\nPlease specify the device to use with the -d option.\n"
         raise PolarUsbDeviceNotFound.new "Couldn't open Polar USB device on #{@serial_dev}: #{e}"
